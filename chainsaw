@@ -9,7 +9,7 @@
 # Author : Amine Asli <asli.amine@gmail.com>
 #
 # Usage :
-#       sysconfig-snapshot [--output file] [--compress] [--help] [--version] 
+#       chainsaw ... 
 #   
 
 VERSION=0.1
