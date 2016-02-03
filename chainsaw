@@ -1,0 +1,40 @@
+#!/bin/bash
+#
+# 
+# 
+# 
+#
+# 
+#
+# Author : Amine Asli <asli.amine@gmail.com>
+#
+# Usage :
+#       sysconfig-snapshot [--output file] [--compress] [--help] [--version] 
+#   
+
+
+
+error()
+{
+   echo "$@" 1>&2
+   usage_and_exit 1
+}
+
+usage( )
+{
+   echo "Usage: $PROGRAM ..."
+}
+
+usage_and_exit( )
+{
+   usage
+   exit $1
+}
+
+version( )
+{
+   echo "$PROGRAM version $VERSION"
+}
+
+
+
