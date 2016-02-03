@@ -30,6 +30,11 @@ error()
    usage_and_exit 1
 }
 
+#log_ban()
+#{
+#   echo
+#}
+
 usage( )
 {
    echo "Usage: $PROGRAM ..."
@@ -57,28 +62,25 @@ while getopts ":hc:e:" opt; do
       e  ) 
            BAN_EXPIRATION="$OPTARG"
            ;;
-      l  )
-           LOGDIR="$OPTARG"
-           ;;
       \? )
-           error 
+           error "Unrecognized option :$OPTARG"
+           ;;
     esac
 done
 
+IFS=$'\n'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+for line in $(netstat -nat | awk '{ print $5}' | cut -d : -f1 | sed -e '/^[[:alpha:]]/d' -e '/^$/d' | sort | uniq -c | sed -e 's/^[ \t]*//')
+do
+   nbr_connections=$(echo $line | cut -d ' ' -f1)
+   ip=$(echo $line | cut -d ' ' -f2) 
+   
+   if [ $nbr_connections lt $MAX_CONNECTIONS ]
+   then
+       break
+   fi
+   
+   ban_ip $ip
+   #log_ban $(date) $ip
+   
+done 
