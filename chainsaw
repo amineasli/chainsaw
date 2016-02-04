@@ -70,17 +70,24 @@ done
 
 IFS=$'\n'
 
-for line in $(netstat -nat | awk '{ print $5}' | cut -d : -f1 | sed -e '/^[[:alpha:]]/d' -e '/^$/d' | sort | uniq -c | sed -e 's/^[ \t]*//')
+for line in $(netstat -ntu | 
+                 awk '{ print $5}'                         | 
+                    cut -d : -f1                           | 
+                       sed -e '/^[[:alpha:]]/d' -e '/^$/d' | 
+                          sort                             | 
+                             uniq -c                       | 
+                                sed -e 's/^[ \t]*//')
 do
-   nbr_connections=$(echo $line | cut -d ' ' -f1)
+
+   total_connections=$(echo $line | cut -d ' ' -f1)
    ip=$(echo $line | cut -d ' ' -f2) 
    
-   if [ $nbr_connections lt $MAX_CONNECTIONS ]
+   if [ $total_connections lt $MAX_CONNECTIONS ]
    then
        break
    fi
    
-   ban_ip $ip
+   #ban_ip $ip
    #log_ban $(date) $ip
    
 done 
