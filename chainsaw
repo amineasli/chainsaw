@@ -51,10 +51,14 @@ version( )
    echo "$PROGRAM version $VERSION"
 }
 
-while getopts ":hc:e:" opt; do
+while getopts ":hvc:e:" opt; do
    case $opt in 
       h  ) 
            usage_and_exit 0
+           ;;
+      v  ) 
+           version
+           exit 0
            ;;
       c  )
            MAX_CONNECTIONS="$OPTARG"
@@ -63,7 +67,7 @@ while getopts ":hc:e:" opt; do
            BAN_EXPIRATION="$OPTARG"
            ;;
       \? )
-           error "Unrecognized option :$OPTARG"
+           error "Unrecognized option : $OPTARG"
            ;;
     esac
 done
@@ -82,12 +86,12 @@ do
    total_connections=$(echo $line | cut -d ' ' -f1)
    ip=$(echo $line | cut -d ' ' -f2) 
    
-   if [ $total_connections lt $MAX_CONNECTIONS ]
+   if [ "$total_connections" -lt "$MAX_CONNECTIONS" ]
    then
        break
    fi
    
-   #ban_ip $ip
+   ban_ip $ip
    #log_ban $(date) $ip
    
 done 
