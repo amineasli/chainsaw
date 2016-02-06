@@ -13,15 +13,16 @@
 #   
 
 VERSION=0.1
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 IPT=/sbin/iptables
 MAX_CONNECTIONS=100
 BAN_EXPIRATION=60
+LOGDIR=/var/log/chainsaw
 
 ban_ip()
 {
    $IPT -I INPUT -s $1 -j DROP && \
-   { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; }
+   { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
 }
 
 error()
@@ -30,10 +31,10 @@ error()
    usage_and_exit 1
 }
 
-#log_ban()
-#{
-#   echo
-#}
+log_ban()
+{
+   echo "$1 Ban IP [$2]" >> "${LOGDIR}/chainsaw.log"
+}
 
 usage( )
 {
@@ -51,7 +52,7 @@ version( )
    echo "$PROGRAM version $VERSION"
 }
 
-while getopts ":hvc:e:" opt; do
+while getopts ":hvc:e:l:" opt; do
    case $opt in 
       h  ) 
            usage_and_exit 0
@@ -66,11 +67,17 @@ while getopts ":hvc:e:" opt; do
       e  ) 
            BAN_EXPIRATION="$OPTARG"
            ;;
+      l  ) 
+           LOGDIR="$OPTARG"
+           ;;
       \? )
            error "Unrecognized option : $OPTARG"
            ;;
     esac
 done
+
+
+test -d "$LOGDIR" || mkdir -p "$LOGDIR" 2> /dev/null
 
 IFS=$'\n'
 
@@ -91,7 +98,7 @@ do
        break
    fi
    
-   #ban_ip $ip
-   #log_ban $(date) $ip
+   ban_ip $ip
+   log_ban $(date) $ip
    
 done 
