@@ -77,10 +77,10 @@ IFS=$'\n'
 for line in $(netstat -ntu | 
                  awk '{ print $5}'                         | 
                     cut -d : -f1                           | 
-                       sed -e '/^[[:alpha:]]/d' -e '/^$/d' | 
+                       sed -e '/^[[:alpha:]]/d' -e '/^$/d' |	#Remove netsat column titles and empty lines
                           sort                             | 
-                             uniq -c                       | 
-                                sed -e 's/^[ \t]*//')
+                             uniq -c                       | 	
+                                sed -e 's/^[ \t]*//')           #Remove leading spaces
 do
 
    total_connections=$(echo $line | cut -d ' ' -f1)
@@ -91,7 +91,7 @@ do
        break
    fi
    
-   ban_ip $ip
+   #ban_ip $ip
    #log_ban $(date) $ip
    
 done 
