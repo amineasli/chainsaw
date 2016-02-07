@@ -1,15 +1,11 @@
 #!/bin/bash
 #
-# 
-# 
-# 
-#
-# 
+# A simple shell script that works in conjunction with iptables to help you fighting DDoS attacks. 
 #
 # Author : Amine Asli <asli.amine@gmail.com>
 #
 # Usage :
-#       chainsaw ... 
+#       chainsaw [option] 
 #   
 
 VERSION=0.1
@@ -38,7 +34,16 @@ log_ban()
 
 usage( )
 {
-   echo "Usage: $PROGRAM ..."
+   cat <<EOF
+Usage:
+   $PROGRAM [ ? ]
+      [ -c digit ]  (Block any IP that has total connections exceeding 'digit')
+      [ -e minutes ] (Specify how much time in minutes the offending IP should be blocked)
+      [ -l dir ]     (Change the default location of the log directory)
+      [ -v ]         (Pring the version number)
+      [ -h ]         (Show this current help)
+       
+EOF
 }
 
 usage_and_exit( )
