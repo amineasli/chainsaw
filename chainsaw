@@ -81,7 +81,6 @@ while getopts ":hvc:e:l:" opt; do
     esac
 done
 
-
 test -d "$LOGDIR" || mkdir -p "$LOGDIR" 2> /dev/null
 
 IFS=$'\n'
@@ -107,3 +106,5 @@ do
    log_ban $(date) $ip
    
 done 
+
+exit 0
