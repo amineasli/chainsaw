@@ -85,13 +85,14 @@ test -d "$LOGDIR" || mkdir -p "$LOGDIR" 2> /dev/null
 
 IFS=$'\n'
 
-for line in $(netstat -ntu | 
+for line in $(netstat -ntu                                 | 
                  awk '{ print $5}'                         | 
                     cut -d : -f1                           | 
                        sed -e '/^[[:alpha:]]/d' -e '/^$/d' |	#Remove netsat column titles and empty lines
                           sort                             | 
-                             uniq -c                       | 	
-                                sed -e 's/^[ \t]*//')           #Remove leading spaces
+                             uniq -c                       |
+                                sort -nr                   |
+                                   sed -e 's/^[ \t]*//')           #Remove leading spaces
 do
 
    total_connections=$(echo $line | cut -d ' ' -f1)
