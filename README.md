@@ -4,7 +4,7 @@ chainsaw is able to automatically mitigate suspected DDoS attacks and keeps trac
 ## Usage
 For better results run chainsaw as a cron job, for example :
 
-    # * * * * * /path/to/chainsaw
+    * * * * * /path/to/chainsaw
 
 See Also : 
 
