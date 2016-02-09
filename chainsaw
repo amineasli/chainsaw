@@ -9,7 +9,7 @@
 #   
 
 VERSION=0.1
-PROGRAM=$(basename $0)
+PROGRAM=$(basename "$0")
 IPT=/sbin/iptables
 MAX_CONNECTIONS=100
 BAN_EXPIRATION=60
@@ -17,7 +17,7 @@ LOGDIR=/var/log/chainsaw
 
 ban_ip()
 {
-   $IPT -I INPUT -s $1 -j DROP && \
+   $IPT -I INPUT -s "$1" -j DROP && \
    { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
 }
 
@@ -37,7 +37,7 @@ usage( )
    cat <<EOF
 Usage:
    $PROGRAM [ ? ]
-      [ -c digit ]  (Block any IP that has total connections exceeding 'digit')
+      [ -c digit ]   (Block any IP that has total connections exceeding 'digit')
       [ -e minutes ] (Specify how much time in minutes the offending IP should be blocked)
       [ -l dir ]     (Change the default location of the log directory)
       [ -v ]         (Pring the version number)
@@ -49,7 +49,7 @@ EOF
 usage_and_exit( )
 {
    usage
-   exit $1
+   exit "$1"
 }
 
 version( )
@@ -95,16 +95,16 @@ for line in $(netstat -ntu                                 |
                                    sed -e 's/^[ \t]*//')           #Remove leading spaces
 do
 
-   total_connections=$(echo $line | cut -d ' ' -f1)
-   ip=$(echo $line | cut -d ' ' -f2) 
+   total_connections=$(echo "$line" | cut -d ' ' -f1)
+   ip=$(echo "$line" | cut -d ' ' -f2) 
    
    if [ "$total_connections" -lt "$MAX_CONNECTIONS" ]
    then
        break
    fi
    
-   ban_ip $ip
-   log_ban $(date) $ip
+   ban_ip "$ip"
+   log_ban "$(date)" "$ip"
    
 done 
 
