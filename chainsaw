@@ -18,7 +18,7 @@ LOGDIR=/var/log/chainsaw
 ban_ip()
 {
    $IPT -I INPUT -s "$1" -j DROP && \
-   { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
+      { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
 }
 
 error()
@@ -32,7 +32,7 @@ log_ban()
    echo "$1 Ban IP [$2]" >> "${LOGDIR}/chainsaw.log"
 }
 
-usage( )
+usage()
 {
    cat <<EOF
 Usage:
@@ -40,7 +40,7 @@ Usage:
       [ -c digit ]   (Block any IP that has total connections exceeding 'digit')
       [ -e minutes ] (Specify how much time in minutes the offending IP should be blocked)
       [ -l dir ]     (Change the default location of the log directory)
-      [ -v ]         (Pring the version number)
+      [ -v ]         (Print the version number)
       [ -h ]         (Show this current help)
        
 EOF
