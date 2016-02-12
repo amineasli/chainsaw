@@ -10,7 +10,7 @@
 
 VERSION=0.1
 PROGRAM=$(basename "$0")
-IPT=/sbin/iptables
+IPT=$(which iptables)
 MAX_CONNECTIONS=100
 BAN_EXPIRATION=60
 LOGDIR=/var/log/chainsaw
