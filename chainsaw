@@ -11,6 +11,7 @@
 VERSION=0.1
 PROGRAM=$(basename "$0")
 IPT=/sbin/iptables
+AT=/usr/bin/at
 MAX_CONNECTIONS=100
 BAN_EXPIRATION=60
 LOGDIR=/var/log/chainsaw
@@ -18,7 +19,7 @@ LOGDIR=/var/log/chainsaw
 ban_ip()
 {
    $IPT -I INPUT -s "$1" -j DROP && \
-   { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
+   { echo "$IPT -D INPUT -s $1 -j DROP" | $AT now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
 }
 
 error()
@@ -94,7 +95,6 @@ for line in $(netstat -ntu                                 |
                                 sort -nr                   |
                                    sed -e 's/^[ \t]*//')           #Remove leading spaces
 do
-
    total_connections=$(echo "$line" | cut -d ' ' -f1)
    ip=$(echo "$line" | cut -d ' ' -f2) 
    
