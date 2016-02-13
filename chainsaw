@@ -93,7 +93,7 @@ for line in $(netstat -ntu                             |
                           sed -e '/^$/d'               |    #Removes empty lines
                              uniq -c                   |
                                 sort -nr               |
-                                   sed -e 's/^[ \t]*//')    #Removre leading spaces
+                                   sed -e 's/^[ \t]*//')    #Removes leading spaces
 do
 
    total_connections=$(echo "$line" | cut -d ' ' -f1)
