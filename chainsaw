@@ -19,11 +19,7 @@ LOGDIR=/var/log/chainsaw
 ban_ip()
 {
    $IPT -I INPUT -s "$1" -j DROP && \
-<<<<<<< HEAD
    { echo "$IPT -D INPUT -s $1 -j DROP" | $AT now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
-=======
-      { echo "$IPT -D INPUT -s $1 -j DROP" | at now + $BAN_EXPIRATION minute; } > /dev/null 2>&1
->>>>>>> b7fe2c08369f5f06c63ca30389c7bb3ebdc4896a
 }
 
 error()
