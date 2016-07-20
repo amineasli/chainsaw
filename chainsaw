@@ -90,10 +90,11 @@ for line in $(netstat -ntu                             |
  	         tail -n +3                            |
 		    awk '{ print $5}'                  | 
                        cut -d : -f1                    |
-                          sed -e '/^$/d'               |    #Removes empty lines
-                             uniq -c                   |
-                                sort -nr               |
-                                   sed -e 's/^[ \t]*//')    #Removes leading spaces
+                          sed -e '/^$/d'               |       #Removes empty lines
+                             sort -n                   |
+                             	uniq -c                |
+                                   sort -nr            |
+                                      sed -e 's/^[ \t]*//')    #Removes leading spaces
 do
 
    total_connections=$(echo "$line" | cut -d ' ' -f1)
