@@ -12,6 +12,7 @@ VERSION=0.2
 PROGRAM=$(basename "$0")
 IPT=/sbin/iptables
 AT=/usr/bin/at
+WHITELIST=('127.0.0.1')
 MAX_CONNECTIONS=100
 BAN_EXPIRATION=60
 LOGDIR=/var/log/chainsaw
@@ -99,10 +100,15 @@ do
 
    total_connections=$(echo "$line" | cut -d ' ' -f1)
    ip=$(echo "$line" | cut -d ' ' -f2) 
-   
+
    if [ "$total_connections" -lt "$MAX_CONNECTIONS" ]
    then
        break
+   fi
+
+   if $(echo "${WHITELIST[@]}" | grep -q "^$ip$")
+   then
+      continue
    fi
    
    ban_ip "$ip"
