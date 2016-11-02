@@ -39,11 +39,12 @@ usage()
    cat <<EOF
 Usage:
    $PROGRAM [ ? ]
-      [ -c digit ]   (Block any IP that has total connections exceeding 'digit')
-      [ -e minutes ] (Specify how much time in minutes the offending IP should be blocked)
-      [ -l dir ]     (Change the default location of the log directory)
-      [ -v ]         (Print the version number)
-      [ -h ]         (Show this current help)
+      [ -w "ip1 ip2" ] (Add a list of IP addresses that should be ignored)
+      [ -c digit ]     (Block any IP that has total connections exceeding 'digit')
+      [ -e minutes ]   (Specify how much time in minutes the offending IP should be blocked)
+      [ -l dir ]       (Change the default location of the log directory)
+      [ -v ]           (Print the version number)
+      [ -h ]           (Show this current help)
        
 EOF
 }
@@ -59,7 +60,7 @@ version( )
    echo "$PROGRAM version $VERSION"
 }
 
-while getopts ":hvc:e:l:" opt; do
+while getopts ":hvw:c:e:l:" opt; do
    case $opt in 
       h  ) 
            usage_and_exit 0
@@ -67,6 +68,11 @@ while getopts ":hvc:e:l:" opt; do
       v  ) 
            version
            exit 0
+           ;;
+      w  )
+           set -f # disable glob
+           IFS=' ' # split on space characters
+           WHITELIST=($OPTARG)
            ;;
       c  )
            MAX_CONNECTIONS="$OPTARG"
@@ -87,14 +93,14 @@ test -d "$LOGDIR" || mkdir -p "$LOGDIR" 2> /dev/null
 
 IFS=$'\n'
 
-for line in $(netstat -ntu                             |
- 	         tail -n +3                            |
-		    awk '{ print $5}'                  | 
-                       cut -d : -f1                    |
-                          sed -e '/^$/d'               |       #Removes empty lines
-                             sort -n                   |
-                             	uniq -c                |
-                                   sort -nr            |
+for line in $(netstat -ntu                                |
+ 	         tail -n +3                               |
+		    awk '{ print $5}'                     | 
+                       cut -d : -f1                       |
+                          sed -e '/^$/d'                  |    #Removes empty lines
+                             sort -n                      |
+                             	uniq -c                   |
+                                   sort -nr               |
                                       sed -e 's/^[ \t]*//')    #Removes leading spaces
 do
 
